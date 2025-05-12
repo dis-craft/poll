@@ -36,6 +36,7 @@ let colorVoteCounts = {};
 let totalVoteCount = 0;
 const NON_VOTABLE_COLORS = [3, 6, 17, 23, 25, 26]; // Colors that can't be voted for
 let mostPickedColor = null;
+let topThreeColors = []; // Track the top three most voted colors
 
 // Tab switching logic
 function initTabs() {
@@ -79,6 +80,7 @@ async function loadColorImages() {
             // Create a color option element
             const colorOption = document.createElement('div');
             colorOption.className = 'color-option';
+            colorOption.dataset.colorId = i;
             
             // Check if this color is not votable
             const isNonVotable = NON_VOTABLE_COLORS.includes(i);
@@ -127,6 +129,12 @@ async function loadColorImages() {
             // Add elements to the DOM
             label.appendChild(checkbox);
             label.appendChild(img);
+            
+            // Add color ID badge for better identification
+            const colorIdBadge = document.createElement('div');
+            colorIdBadge.className = 'color-id-badge';
+            colorIdBadge.textContent = `#${i}`;
+            label.appendChild(colorIdBadge);
             
             // Add "Not Available" text for non-votable colors
             if (isNonVotable) {
@@ -239,7 +247,7 @@ function submitVote() {
         if (checkbox.checked) {
             selectedColors.push({
                 id: checkbox.dataset.colorId,
-                name: checkbox.value
+                name: `Color #${checkbox.dataset.colorId}`
             });
         }
     });
@@ -366,13 +374,13 @@ function displayVotes(votes) {
             
             const colorImg = document.createElement('img');
             colorImg.src = `images/${color.id}.png`;
-            colorImg.alt = color.name;
+            colorImg.alt = `Color #${color.id}`;
             colorImg.onerror = () => {
                 colorImg.src = 'https://via.placeholder.com/30?text=?';
             };
             
             colorElement.appendChild(colorImg);
-            colorElement.appendChild(document.createTextNode(color.name));
+            colorElement.appendChild(document.createTextNode(`Color #${color.id}`));
             voteColors.appendChild(colorElement);
         });
         
@@ -434,7 +442,7 @@ function loadLeaderboard() {
                         if (!colorVoteCounts[colorId]) {
                             colorVoteCounts[colorId] = {
                                 id: colorId,
-                                name: color.name,
+                                name: `Color #${colorId}`,
                                 count: 0
                             };
                         }
@@ -443,8 +451,16 @@ function loadLeaderboard() {
                     });
                 });
                 
+                // Store the top three colors
+                const colorArray = Object.values(colorVoteCounts);
+                colorArray.sort((a, b) => b.count - a.count);
+                topThreeColors = colorArray.slice(0, 3);
+                
                 displayLeaderboard();
                 displayMostPickedColor();
+                
+                // Highlight top colors in the voting section
+                highlightTopColors();
             } else {
                 leaderboardContainer.innerHTML = '<div class="no-data">No votes yet. Be the first to vote!</div>';
                 // Hide the most picked color section if there are no votes
@@ -461,6 +477,40 @@ function loadLeaderboard() {
             leaderboardContainer.innerHTML = '<div class="error-message">Error loading leaderboard. Please try again later.</div>';
             loadingElement.style.display = 'none';
         });
+}
+
+// Highlight top colors in the voting section
+function highlightTopColors() {
+    // First, remove any existing highlights
+    document.querySelectorAll('.color-option').forEach(option => {
+        option.classList.remove('top-color', 'first-place', 'second-place', 'third-place');
+    });
+    
+    // Add highlights for top colors
+    topThreeColors.forEach((color, index) => {
+        const colorOption = document.querySelector(`.color-option[data-color-id="${color.id}"]`);
+        if (colorOption) {
+            colorOption.classList.add('top-color');
+            
+            // Add specific place class
+            if (index === 0) {
+                colorOption.classList.add('first-place');
+            } else if (index === 1) {
+                colorOption.classList.add('second-place');
+            } else if (index === 2) {
+                colorOption.classList.add('third-place');
+            }
+            
+            // Add a badge for top 3
+            const existingBadge = colorOption.querySelector('.top-badge');
+            if (!existingBadge) {
+                const badge = document.createElement('div');
+                badge.className = 'top-badge';
+                badge.textContent = `#${index + 1}`;
+                colorOption.appendChild(badge);
+            }
+        }
+    });
 }
 
 // Display the most picked color
@@ -486,9 +536,11 @@ function displayMostPickedColor() {
     // Display the most picked color
     const percentage = totalVoteCount > 0 ? Math.round((mostPickedColor.count / totalVoteCount) * 100) : 0;
     
-    mostPickedContainer.innerHTML = `
+    const mostPickedContent = document.getElementById('mostPickedColorContent');
+    mostPickedContent.innerHTML = `
         <div class="most-picked-color-image">
             <img src="images/${mostPickedColor.id}.png" alt="${mostPickedColor.name}">
+            <div class="most-picked-color-id">#${mostPickedColor.id}</div>
         </div>
         <div class="most-picked-color-details">
             <div class="most-picked-color-name">${mostPickedColor.name}</div>
@@ -498,6 +550,40 @@ function displayMostPickedColor() {
             </div>
         </div>
     `;
+    
+    // Also show top 3 if we have enough votes
+    if (colorArray.length >= 3) {
+        const topColorsSection = document.createElement('div');
+        topColorsSection.className = 'top-colors-section';
+        topColorsSection.innerHTML = '<h3>Top 3 Colors</h3>';
+        
+        const topColorsContainer = document.createElement('div');
+        topColorsContainer.className = 'top-colors-container';
+        
+        for (let i = 0; i < Math.min(3, colorArray.length); i++) {
+            const color = colorArray[i];
+            const colorPercentage = totalVoteCount > 0 ? Math.round((color.count / totalVoteCount) * 100) : 0;
+            
+            const topColorItem = document.createElement('div');
+            topColorItem.className = `top-color-item top-${i+1}`;
+            
+            topColorItem.innerHTML = `
+                <div class="top-color-rank">#${i+1}</div>
+                <div class="top-color-image">
+                    <img src="images/${color.id}.png" alt="${color.name}">
+                </div>
+                <div class="top-color-info">
+                    <div class="top-color-id">Color #${color.id}</div>
+                    <div class="top-color-votes">${color.count} votes (${colorPercentage}%)</div>
+                </div>
+            `;
+            
+            topColorsContainer.appendChild(topColorItem);
+        }
+        
+        topColorsSection.appendChild(topColorsContainer);
+        mostPickedContainer.appendChild(topColorsSection);
+    }
 }
 
 // Display leaderboard data
@@ -514,6 +600,9 @@ function displayLeaderboard() {
         
         const leaderboardItem = document.createElement('div');
         leaderboardItem.className = 'leaderboard-item';
+        if (index < 3) {
+            leaderboardItem.classList.add(`top-${index+1}-color`);
+        }
         
         const rankElement = document.createElement('div');
         rankElement.className = 'leaderboard-rank';
@@ -528,6 +617,10 @@ function displayLeaderboard() {
         imageElement.onerror = () => {
             imageElement.src = 'https://via.placeholder.com/150?text=?';
         };
+        
+        const colorIdElement = document.createElement('div');
+        colorIdElement.className = 'leaderboard-color-id';
+        colorIdElement.textContent = `#${color.id}`;
         
         const detailsElement = document.createElement('div');
         detailsElement.className = 'leaderboard-details';
@@ -554,6 +647,7 @@ function displayLeaderboard() {
         detailsElement.appendChild(progressContainer);
         
         imageContainer.appendChild(imageElement);
+        imageContainer.appendChild(colorIdElement);
         
         leaderboardItem.appendChild(rankElement);
         leaderboardItem.appendChild(imageContainer);
