@@ -306,16 +306,31 @@ h2 {
 }
 
 /* Selected count */
-.selected-count {
-    text-align: right;
+.color-selection-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin: 10px 0;
-    font-weight: bold;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--white);
     position: sticky;
     top: 0;
-    background-color: var(--white);
-    padding: 8px 0;
     z-index: 10;
-    border-bottom: 1px solid var(--border-color);
+}
+
+.selected-count {
+    font-weight: bold;
+}
+
+.color-id-info {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.color-id-info i {
+    color: var(--primary-color);
+    margin-right: 5px;
 }
 
 /* Most picked color section */

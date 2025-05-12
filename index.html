@@ -24,6 +24,7 @@
         <section id="voting" class="tab-content active">
             <div class="instructions">
                 <p>Please select your name and choose <strong>three colors</strong> from the options below.</p>
+                <p>Each color has a unique ID number (shown as <strong>#1</strong>, <strong>#2</strong>, etc.) to help you identify your favorites.</p>
                 <p class="fair-message">Keep it fair! You can only vote once.</p>
                 <p><strong>Note:</strong> Some colors are not available for voting as they have been chosen by other Swayam teams.</p>
             </div>
@@ -62,8 +63,13 @@
                 </select>
                 
                 <h2>Step 2: Choose Three Colors</h2>
-                <div class="selected-count">
-                    <p>Selected: <span id="selectedCount">0</span>/3</p>
+                <div class="color-selection-info">
+                    <div class="selected-count">
+                        <p>Selected: <span id="selectedCount">0</span>/3</p>
+                    </div>
+                    <div class="color-id-info">
+                        <p><i class="fas fa-info-circle"></i> Colors are identified by their number (e.g., #1, #2, etc.)</p>
+                    </div>
                 </div>
                 
                 <div class="color-options" id="colorOptions">
@@ -101,7 +107,7 @@
         <section id="leaderboard" class="tab-content">
             <h2>Color Leaderboard</h2>
             <div class="leaderboard-info">
-                <p>See which colors are the most popular among voters!</p>
+                <p>See which colors are the most popular among voters! The top 3 colors are highlighted with gold, silver and bronze indicators.</p>
             </div>
             <div class="leaderboard-container" id="leaderboardContainer">
                 <!-- Leaderboard will be loaded dynamically -->
@@ -113,7 +119,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2023 Color Voting Portal</p>
+        <p>&copy; 2025 Color Voting Portal</p>
     </footer>
 
     <!-- Firebase SDK -->
