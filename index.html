@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Voting Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Color Voting Portal</h1>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="voting">Vote</button>
+            <button class="tab-btn" data-tab="results">Results</button>
+            <button class="tab-btn" data-tab="leaderboard">Leaderboard</button>
+        </div>
+        
+        <!-- Voting Section -->
+        <section id="voting" class="tab-content active">
+            <div class="instructions">
+                <p>Please select your name and choose <strong>three colors</strong> from the options below.</p>
+                <p class="fair-message">Keep it fair! You can only vote once.</p>
+            </div>
+            
+            <div class="voting-form">
+                <h2>Step 1: Select Your Name</h2>
+                <select id="nameSelect" required>
+                    <option value="" disabled selected>Select your name</option>
+                    <option value="Heerath Bhat">Heerath Bhat</option>
+                    <option value="Manojna M Bhat">Manojna M Bhat</option>
+                    <option value="Chinthan M">Chinthan M</option>
+                    <option value="Greeshma D J">Greeshma D J</option>
+                    <option value="Rohan Badmi">Rohan Badmi</option>
+                    <option value="Hemanth S. Savanth">Hemanth S. Savanth</option>
+                    <option value="C Varun">C Varun</option>
+                    <option value="Chithra R">Chithra R</option>
+                    <option value="Divyaa Varshini G">Divyaa Varshini G</option>
+                    <option value="S Naren Kumar">S Naren Kumar</option>
+                    <option value="SRIKAR T">SRIKAR T</option>
+                    <option value="Suhana">Suhana</option>
+                    <option value="Bikram Panda">Bikram Panda</option>
+                    <option value="Swaroop K G">Swaroop K G</option>
+                </select>
+                
+                <h2>Step 2: Choose Three Colors</h2>
+                <div class="selected-count">
+                    <p>Selected: <span id="selectedCount">0</span>/3</p>
+                </div>
+                
+                <div class="color-options" id="colorOptions">
+                    <!-- Color images will be loaded dynamically via JavaScript -->
+                </div>
+                
+                <button id="submitVote" class="submit-btn">
+                    <i class="fas fa-vote-yea"></i> Submit Vote
+                </button>
+            </div>
+            
+            <div id="messageBox" class="message-box"></div>
+        </section>
+        
+        <!-- Results Section -->
+        <section id="results" class="tab-content">
+            <h2>All Votes</h2>
+            <div class="filters">
+                <input type="text" id="searchVotes" placeholder="Search by name..." class="search-input">
+                <select id="sortVotes" class="sort-select">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="name">Name (A-Z)</option>
+                </select>
+            </div>
+            <div class="votes-container" id="votesContainer">
+                <!-- Votes will be loaded dynamically -->
+                <div class="loading-spinner" id="votesLoading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading votes...
+                </div>
+            </div>
+        </section>
+        
+        <!-- Leaderboard Section -->
+        <section id="leaderboard" class="tab-content">
+            <h2>Color Leaderboard</h2>
+            <div class="leaderboard-info">
+                <p>See which colors are the most popular among voters!</p>
+            </div>
+            <div class="leaderboard-container" id="leaderboardContainer">
+                <!-- Leaderboard will be loaded dynamically -->
+                <div class="loading-spinner" id="leaderboardLoading">
+                    <i class="fas fa-spinner fa-spin"></i> Loading leaderboard...
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Color Voting Portal</p>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <script src="script.js"></script>
+</body>
+</html> 
