@@ -59,14 +59,14 @@ The application uses the following Firebase configuration:
 
 ```javascript
 const firebaseConfig = {
-    apiKey: "AIzaSyBSbonwVE3PPXIIrSrvrB75u2AQ_B_Tni4",
-    authDomain: "discraft-c1c41.firebaseapp.com",
-    databaseURL: "https://discraft-c1c41-default-rtdb.firebaseio.com",
-    projectId: "discraft-c1c41",
-    storageBucket: "discraft-c1c41.appspot.com",
-    messagingSenderId: "525620150766",
-    appId: "1:525620150766:web:a426e68d206c68764aceff",
-    measurementId: "G-2TRNRYRX5E"
+    apiKey: "",
+    authDomain: "",
+    databaseURL: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: "",
+    measurementId: ""
 };
 ```
 
